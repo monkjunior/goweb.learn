@@ -44,3 +44,15 @@ fresh
     - Useful for simple testing or set up a middleware for different router, domain-based handling.
 
     - Missing features: regex matching pattern, named url params, dynamic url.
+
+- [julienschmidt/httprouter](https://github.com/julienschmidt/httprouter)
+
+    - Simple, fast, Mem & CPU friendly
+
+    - If your application needs to serve HTTP files, this is the best choice
+
+    - If your application spends most of the time dealing with DB, read things from disk and so on, this router should not be your primary concern
+
+    - Named parms -> Dynamic URL
+
+    - Support HTTP method for route matching

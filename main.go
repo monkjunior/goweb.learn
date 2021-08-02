@@ -3,25 +3,22 @@ package main
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/julienschmidt/httprouter"
 )
 
-func myHandlerFunc(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
-	switch r.URL.Path {
-	case "/":
-		fmt.Fprint(w, "<h1>Building an awesome web app!</h1>")
-	case "/dragon":
-		fmt.Fprint(w, "<h1>This is a dragon!</h1>")
-	case "/hydra":
-		fmt.Fprint(w, "<h1>This is a hydra!</h1>")
-	default:
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprint(w, "<h1>Oop! 404 page!</h1>")
-	}
+func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	fmt.Fprint(w, "Welcome!\n")
+}
+
+func Hello(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	fmt.Fprintf(w, "hello, %s!\n", ps.ByName("name"))
 }
 
 func main() {
-	mux := &http.ServeMux{}
-	mux.HandleFunc("/", myHandlerFunc)
-	http.ListenAndServe(":8080", mux)
+	router := httprouter.New()
+	router.GET("/", Index)
+	router.GET("/hello/:name", Hello)
+
+	http.ListenAndServe(":8080", router)
 }
