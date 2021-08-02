@@ -2,8 +2,14 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 )
 
+func handlerFunc(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "<h1>Welcome to my awesome site!</h1>")
+}
+
 func main() {
-	fmt.Println("Hello, world")
+	http.HandleFunc("/", handlerFunc)
+	http.ListenAndServe(":8080", nil) //Use the built-in serve mux
 }
