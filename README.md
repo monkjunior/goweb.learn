@@ -28,3 +28,19 @@ fresh
 
 > If WriteHeader has not yet been called, Write calls
 > WriteHeader(http.StatusOK) before writing the data.
+
+- ServeMux: pattern matching and why we should not use this mux?
+
+    - Exactly match, care of your traling slask */*
+
+    - Longest pattern match
+
+    - "/"  matches everything
+
+    - No dependencies
+
+    - TOO simple
+
+    - Useful for simple testing or set up a middleware for different router, domain-based handling.
+
+    - Missing features: regex matching pattern, named url params, dynamic url.

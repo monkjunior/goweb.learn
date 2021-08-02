@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func handlerFunc(w http.ResponseWriter, r *http.Request) {
+func myHandlerFunc(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 	switch r.URL.Path {
 	case "/":
@@ -21,6 +21,7 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", handlerFunc)
-	http.ListenAndServe(":8080", nil) //Use the built-in serve mux
+	mux := &http.ServeMux{}
+	mux.HandleFunc("/", myHandlerFunc)
+	http.ListenAndServe(":8080", mux)
 }
