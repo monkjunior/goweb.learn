@@ -22,3 +22,9 @@ cd path/go/myapp
 fresh
 ```
 - Should explicit set the Content-Type header if you can.
+
+- HTTP status codes
+[net/http header write](https://pkg.go.dev/net/http#Header.Write)
+
+> If WriteHeader has not yet been called, Write calls
+> WriteHeader(http.StatusOK) before writing the data.
