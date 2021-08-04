@@ -4,21 +4,24 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/julienschmidt/httprouter"
+	"github.com/gorilla/mux"
 )
 
-func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	fmt.Fprint(w, "Welcome!\n")
-}
-
-func Hello(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	fmt.Fprintf(w, "hello, %s!\n", ps.ByName("name"))
+func handleFunc(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	if r.URL.Path == "/" {
+		fmt.Fprint(w, "<h1>Welcome to my awsome site!</h1>")
+	} else if r.URL.Path == "/contact" {
+		fmt.Fprint(w, "To get in touch, please send an email to <a href=\"mailto:vungocson998@gmail.com\">vungocson998@gmail.com</a>.")
+	} else {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprint(w, "<h1>404</h1>")
+	}
 }
 
 func main() {
-	router := httprouter.New()
-	router.GET("/", Index)
-	router.GET("/hello/:name", Hello)
-
-	http.ListenAndServe(":8080", router)
+	r := mux.NewRouter()
+	r.HandleFunc("/", handleFunc)
+	r.HandleFunc("/contact", handleFunc)
+	http.ListenAndServe(":8080", r)
 }
