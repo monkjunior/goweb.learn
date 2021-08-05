@@ -68,3 +68,5 @@ fresh
     - Also support HTTP methods
 
     - Can easily switch between gorilla mux and default build-in mux
+
+    - Auto handle 404
