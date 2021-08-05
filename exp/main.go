@@ -30,4 +30,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	// HTML template auto handle HTML encoding for us
+	data.Name = "<script>alert('hi')</script>"
+
+	err = t.Execute(os.Stdout, data)
+	if err != nil {
+		panic(err)
+	}
 }

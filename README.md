@@ -82,4 +82,4 @@ Go provides text/template and html/template package. They use a similar interfac
 
 html/template package:
 
-    - Code injection
+    - Auto do HTML encoding to prevent code injection
