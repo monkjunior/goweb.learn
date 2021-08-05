@@ -83,3 +83,28 @@ Go provides text/template and html/template package. They use a similar interfac
 html/template package:
 
     - Auto do HTML encoding to prevent code injection
+
+
+## MVC: Model-View-Controller
+
+How the web request come and travel along these components ?
+
+View: rendering data. The data could be in any kind: json, html, etc. View should least logic as possible.
+
+    - Create reusable layouts
+
+Controller: middle man, router
+
+    - Control the flow of our codes
+
+    - Should not have a ton of logic in it
+
+    - The way controllers use to talk to other components is like "Hey, i have some stuff to do, pls do this for me!". They does not do anything much.
+
+Model: connect to database, connect to other APIs
+
+    - Interact with our data. Data can be DBs, APIs, Files, S3, etc.
+
+    - Can do validate data here.
+
+Not everything need to design with MVC.
