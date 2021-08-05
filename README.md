@@ -108,3 +108,8 @@ Model: connect to database, connect to other APIs
     - Can do validate data here.
 
 Not everything need to design with MVC.
+
+## Bootstrap
+
+A framework for HTML, CSS and JS
+
