@@ -70,3 +70,16 @@ fresh
     - Can easily switch between gorilla mux and default build-in mux
 
     - Auto handle 404
+
+
+## Template
+
+Template supports putting dynamic data into a text file.
+
+Logic should be handled before you go to the template handling.
+
+Go provides text/template and html/template package. They use a similar interface.
+
+html/template package:
+
+    - Code injection
