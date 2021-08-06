@@ -128,3 +128,25 @@ Use method instead of function let you access to object data without public a bu
 - This is error prone.
 
 - Shorter code != easier to understand or maintain
+
+## Persisting your data
+
+You can use anything to persist data:
+
+- CSVs
+
+- DBs, each has its pros and cons that  you need to understand when you consider to pick one.
+
+PostgreSQL:
+
+- Massive scale: billion of users
+
+- Educational resources
+
+    - [Using PostgreSQL with Golang](https://www.calhoun.io/using-postgresql-with-go/)
+
+    - [Codecademy's Learn SQL course](https://www.codecademy.com/learn/learn-sql)
+
+    - [w3sschools's course](https://www.w3schools.com/sql/)
+
+    - [quora](https://www.quora.com/How-do-I-learn-SQL)
