@@ -113,3 +113,13 @@ Not everything need to design with MVC.
 
 A framework for HTML, CSS and JS
 
+## User controller
+
+An action = Handler function.
+
+    - Take a req, kick off some logic and then respone
+
+Restful design.
+
+Use method instead of function let you access to object data without public a bunch of global variables.
+
