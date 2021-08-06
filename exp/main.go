@@ -23,12 +23,23 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer db.Close()
 
-	err = db.Ping()
+	var id int
+	err = db.QueryRow(`
+		INSERT INTO users(name, email)
+		VALUES($1, $2)
+		RETURNING id`,
+		"Teddy", "ted@goweb.learn").Scan(&id)
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println(id)
 
-	fmt.Println("Successfully connected!")
-	db.Close()
+	// var name string
+	// err = db.QueryRow("SELECT name FROM users WHERE id = ?", id).Scan(&name)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Println(name)
 }
