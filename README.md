@@ -150,3 +150,17 @@ PostgreSQL:
     - [w3sschools's course](https://www.w3schools.com/sql/)
 
     - [quora](https://www.quora.com/How-do-I-learn-SQL)
+
+[Why we import packages that we dont actually use ?](https://www.calhoun.io/why-we-import-sql-drivers-with-the-blank-identifier/)
+
+```bash
+docker run -d \
+    --name goweb-postgres \
+    -p 5432:5432 \
+    -e POSTGRES_USER=ted \
+    -e POSTGRES_PASSWORD=your-password \
+    -e POSTGRES_DB=goweb_dev \
+    -e PGDATA=/var/lib/postgresql/data/pgdata \
+    -v postgresql:/var/lib/postgresql/data \
+    postgres
+```
