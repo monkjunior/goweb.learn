@@ -123,3 +123,8 @@ Restful design.
 
 Use method instead of function let you access to object data without public a bunch of global variables.
 
+## DRY up your code (dont repeat yourself)
+
+- This is error prone.
+
+- Shorter code != easier to understand or maintain
