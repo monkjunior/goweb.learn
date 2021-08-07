@@ -164,3 +164,7 @@ docker run -d \
     -v postgresql:/var/lib/postgresql/data \
     postgres
 ```
+
+Relational datas:
+
+- GORM, ORM stands for Object Relational Mapping

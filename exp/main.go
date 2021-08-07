@@ -25,21 +25,21 @@ func main() {
 	}
 	defer db.Close()
 
-	var id int
-	err = db.QueryRow(`
-		INSERT INTO users(name, email)
-		VALUES($1, $2)
-		RETURNING id`,
-		"Teddy", "ted@goweb.learn").Scan(&id)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(id)
+	for i := 1; i <= 6; i++ {
+		userID := 1
+		if i > 3 {
+			userID = 2
+		}
+		amount := 100 * i
+		description := fmt.Sprintf("USB-C Adapter x%d", i)
 
-	// var name string
-	// err = db.QueryRow("SELECT name FROM users WHERE id = ?", id).Scan(&name)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// fmt.Println(name)
+		rows, err := db.Query(`
+			SELECT FROM users
+			INNER JOIN orders ON users.id=orders.user_id
+			`, userID, amount, description,
+		)
+		if err != nil {
+			panic(err)
+		}
+	}
 }
