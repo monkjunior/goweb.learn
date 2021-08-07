@@ -196,3 +196,5 @@ User's attributes:
     - Email
 
 We will not put in password field until we make sure that we stored other things correctly.
+
+Before you really understand your code that you are writing, adding more automate tests is not necessary.

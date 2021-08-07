@@ -39,5 +39,15 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Printf("%v\n", user)
+	fmt.Printf("Predefined %v\n", user)
+
+	newUser := models.User{
+		Name:  "duong",
+		Email: "duongcho@gmail.com",
+	}
+	err = us.Create(&newUser)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("New user: %v\n", newUser)
 }
