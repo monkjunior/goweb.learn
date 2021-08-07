@@ -170,6 +170,13 @@ Relational datas:
 - GORM, ORM stands for Object Relational Mapping
 
     - Define models
+
     - AutoMigrate
 
-- Validate fields both at DB layer and backend level, or even fronend level
+    - Validate fields both at DB layer and backend level, or even fronend level
+
+    - Break .Where() to smaller chains makes your code more readable.
+
+    - Show relational data: Preload loads the association data in a separate query.
+
+        - This will not use JOIN
