@@ -180,3 +180,19 @@ Relational datas:
     - Show relational data: Preload loads the association data in a separate query.
 
         - This will not use JOIN
+
+## Creating User model
+
+The Controller layer dont need to know what database engine that the model is using.
+
+    - We will create an interface to seperate 2 layers -> A service layer
+
+User's attributes:
+
+    - gorm.Model: id, created_at, updated_at, deleted_at
+
+    - Name
+
+    - Email
+
+We will not put in password field until we make sure that we stored other things correctly.
