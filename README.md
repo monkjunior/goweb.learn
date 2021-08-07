@@ -168,3 +168,8 @@ docker run -d \
 Relational datas:
 
 - GORM, ORM stands for Object Relational Mapping
+
+    - Define models
+    - AutoMigrate
+
+- Validate fields both at DB layer and backend level, or even fronend level
