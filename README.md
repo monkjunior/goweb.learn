@@ -205,3 +205,38 @@ But in go, to run test, you need to run
 ```bash
 go test .
 ```
+
+## AuthN System
+
+This is the most important and sensitive part of your app.
+
+But implement this is not that hard. There are many small but relatively simple steps.
+
+DO NOT deviate from the norms!
+
+Why dont we use a third party package ?
+
+- Every web dev should have a basic understanding of secure auth practises.
+
+- Custome requirements mean you still need to customize most off-the-shelf solutions.
+
+- It could save your time in the long run.
+
+- It could alse save your money over using services like Auth0 or Stormpath.
+
+Customer requirements and basic understanding
+
+- Without understand basic security, it is easy to compromise your system when you make these customizations, so you can not avoid learning this.
+
+Saving time
+
+- Custom our auth is easy.
+
+Do not reinvent the wheel
+
+Always use SSL/TLS in prod
+
+- Password should never go over the wire unencrypted
+
+- Cookie theft
+
