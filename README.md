@@ -253,3 +253,17 @@ Hashing password
     - bcrypt
 
 - Why cann't they just reverse those hashes ?
+
+- Salt and Pepper are techniques that make hackers harder to figure out our passwords.
+
+    - Salting: giving every user password some random strings added to it before we hash it.
+
+        - Diff users can have diff salts.
+
+        - Can be stored in databases.
+    
+    - Peppers: same idea with salting technique. But if salt is applied to each users, pepper is applied to each application.
+
+        - Not stored in DB but our application (our codes).
+
+        - Not entirely necessary.
