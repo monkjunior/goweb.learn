@@ -240,3 +240,16 @@ Always use SSL/TLS in prod
 
 - Cookie theft
 
+Hashing password
+
+- If you can decrypt the password, you are doing it wrong! You are not hashing but encrypting.
+
+- These two are VERY different.
+
+- Your app should NEVER be able to recreate a password. So how do we verify a user's password when they log in ?
+
+- Instead of storing a password, we store a hash.
+
+    - bcrypt
+
+- Why cann't they just reverse those hashes ?
