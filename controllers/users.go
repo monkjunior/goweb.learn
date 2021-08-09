@@ -84,9 +84,16 @@ func (u *Users) PostLogin(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	user := models.User{
-		Email:    form.Email,
-		Password: form.Password,
+	user, err := u.us.Authenticate(form.Email, form.Password)
+	switch err {
+	case models.ErrNotFound:
+		fmt.Fprintln(w, "Invalid email address")
+	case models.ErrInvalidPassword:
+		fmt.Fprintln(w, "Invalid password provided")
+	case nil:
+		fmt.Fprintln(w, user)
+	default:
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	fmt.Fprintln(w, user)
+
 }
