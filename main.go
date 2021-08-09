@@ -36,6 +36,8 @@ func main() {
 	r.Handle("/contact", staticC.Contact).Methods("GET")
 	r.HandleFunc("/signup", usersC.New).Methods("GET")
 	r.HandleFunc("/signup", usersC.Create).Methods("POST")
+	r.HandleFunc("/login", usersC.GetLogin).Methods("GET")
+	r.HandleFunc("/login", usersC.PostLogin).Methods("POST")
 	fmt.Println("Starting server on port 8080")
 	http.ListenAndServe(":8080", r)
 }

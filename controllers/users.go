@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/monkjunior/goweb.learn/models"
@@ -9,14 +10,16 @@ import (
 
 func NewUsers(us *models.UserService) *Users {
 	return &Users{
-		NewView: views.NewView("bootstrap", "users/new"),
-		us:      us,
+		NewView:   views.NewView("bootstrap", "users/new"),
+		LoginView: views.NewView("bootstrap", "users/login"),
+		us:        us,
 	}
 }
 
 type Users struct {
-	NewView *views.View
-	us      *models.UserService
+	NewView   *views.View
+	LoginView *views.View
+	us        *models.UserService
 }
 
 // This is used to render the form where a user can create
@@ -54,4 +57,36 @@ func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+type LoginForm struct {
+	Email    string `schema:"email"`
+	Password string `schema:"password"`
+}
+
+// This is used to render the form where a user can login
+// a registered account
+//
+// GET /login
+func (u *Users) GetLogin(w http.ResponseWriter, r *http.Request) {
+	if err := u.LoginView.Render(w, nil); err != nil {
+		panic(err)
+	}
+}
+
+// This is used to process login form when a user tries to
+// login by a registered account
+//
+// POST /login
+func (u *Users) PostLogin(w http.ResponseWriter, r *http.Request) {
+	var form LoginForm
+	if err := parseForm(r, &form); err != nil {
+		panic(err)
+	}
+
+	user := models.User{
+		Email:    form.Email,
+		Password: form.Password,
+	}
+	fmt.Fprintln(w, user)
 }
