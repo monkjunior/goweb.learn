@@ -267,3 +267,49 @@ Hashing password
         - Not stored in DB but our application (our codes).
 
         - Not entirely necessary.
+
+## Remembering users
+
+Web servers are stateless means:
+
+- The server handles each request independently.
+
+- Servers will not remember what you did 15 mins ago.
+
+- Pros:
+
+    - Users can talk to different servers each request -> Easy to scale.
+
+    - Server outages dont lose work.
+
+    - Easier to code - each request has all the data if needs.
+
+So how do we remember who a user is then ?
+
+- We dont.
+
+- We let the user tell us who they are every web request!
+
+    - How do users tell us who they are ?
+
+    - What if a user lies to us ?
+
+    - This does not make any sense!!!
+
+What are cookies?
+
+- Data file stored on a user's computer.
+
+- Linked to a specific domain.
+
+- Both user and server can edit the cookies.
+
+What are cookies used for ?
+
+- Session
+
+- JWTs can be stored in cookies
+
+Create our first cookie
+
+- Store an email address
