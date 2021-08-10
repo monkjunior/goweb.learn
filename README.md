@@ -313,3 +313,39 @@ What are cookies used for ?
 Create our first cookie
 
 - Store an email address
+
+## Five major attack vectors
+
+1. Cookie tampering
+
+- Editing the cookies.
+
+2. A database leak that allows users to create fake cookies
+
+3. Cross site scripting - XSS
+
+- Letting user inject JS into your site
+
+4. Cookie theft (via packet sniffing or physical access)
+
+5. Cross site request forgery (CSRF)
+
+- Sending web requests to other servers on behalf of a user w/out them knowing
+
+4 and 5 will be covered when we prepare for deploying to prod.
+
+### Cookie tampering
+
+Signature
+
+RememberToken:
+
+- Should not store raw token to database but we store the hash of it.
+
+- Could not use salt here !! Can not use bcrypt !!
+
+- User HMAC hashing
+
+- Quite similar to refresh_token in JWTs
+
+- So you should not learn JWTs right away, learn these basic first!
