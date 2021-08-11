@@ -377,3 +377,7 @@ How bcrypt works ?
 - Compare hashes
 
 So we can not use bcrypt because we can not look up the user with the Remember token. So we use HMAC. So how HMAC works ?
+
+### Prevent XSS - Cross-Site Scripting
+
+Protect your cookies with [HTTP only](https://blog.codinghorror.com/protecting-your-cookies-httponly/)
