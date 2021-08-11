@@ -359,3 +359,21 @@ RememberToken:
 - Lookup the user bases on that hash value.
 
 - Take our controller and connect all the dots.
+
+### Why 32 bytes ?
+
+- Entropy :D
+
+### Why we not use bcrypt but HMAC to hash RememberToken
+
+How bcrypt works ?
+
+- Look up a user
+
+- Look at user's salt
+
+- Hash password with salt
+
+- Compare hashes
+
+So we can not use bcrypt because we can not look up the user with the Remember token. So we use HMAC. So how HMAC works ?
