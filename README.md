@@ -349,3 +349,13 @@ RememberToken:
 - Quite similar to refresh_token in JWTs
 
 - So you should not learn JWTs right away, learn these basic first!
+
+4 Major steps:
+
+- Generate User's remember token on the user's cookie.
+
+- Hash the token then store it on backend.
+
+- Lookup the user bases on that hash value.
+
+- Take our controller and connect all the dots.
