@@ -425,3 +425,35 @@ When we deploy:
 - Using caddy server to handle SSL/TLS
 
 - Use a thirdparty CSRF for those. It can prevent requests even before they reach our controllers.
+
+## Validating and normalizing
+
+Making sure data is valid and in the format that we expect.
+
+- Validation: making sure data meet our minimum requirements
+
+    - Verifying an email is valid and is not taken
+
+    - Verifying a password is a certain length
+
+- Normalization: making sure data is in the format that we expect
+
+    - Converting all email addresses to lowercase
+
+    - Hashing passwords and remember tokens
+
+- It not database normalization, which is storing data in separate tables and referencing a single source.
+
+- Normalization and validation is tightly linked.
+
+    - You need to normalize an email before verifying it is available.
+
+    - You need to validate password length before hashing it.
+
+We will create some sub-layers inside models layer to do this.
+
+|Model sub-layers               |
+|:---:                          |
+|DB read/write                  |
+|DB validation/normalization    |
+|UserService                    |
