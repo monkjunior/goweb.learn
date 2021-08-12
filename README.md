@@ -457,3 +457,15 @@ We will create some sub-layers inside models layer to do this.
 |DB read/write                  |
 |DB validation/normalization    |
 |UserService                    |
+
+### Embedded interface and chaining
+
+By embedding interface, it allows us to hot swap between objects implemented that interface without our code need to worry about it.
+
+Chaning
+
+THE MAGIC OF INTERFACES !!
+
+[Go interface](https://youtu.be/qJKQZKGZgf0)
+
+[All about Go](https://youtu.be/s_gRXOsrDAA)
