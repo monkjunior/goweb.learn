@@ -98,8 +98,8 @@ func (u *Users) PostLogin(w http.ResponseWriter, r *http.Request) {
 		switch err {
 		case models.ErrNotFound:
 			fmt.Fprintln(w, "Invalid email address")
-		case models.ErrInvalidPassword:
-			fmt.Fprintln(w, "Invalid password provided")
+		case models.ErrPasswordIncorrect:
+			fmt.Fprintln(w, "Incorrect password provided")
 		default:
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
