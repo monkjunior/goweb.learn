@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-func testingUserService() (*UserService, error) {
+func testinguserGorm() (*userGorm, error) {
 	var (
 		host     = "localhost"
 		port     = 5432
@@ -19,7 +19,7 @@ func testingUserService() (*UserService, error) {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname,
 	)
-	us, err := NewUserService(psqlInfo)
+	us, err := newUserGorm(psqlInfo)
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +30,7 @@ func testingUserService() (*UserService, error) {
 }
 
 func TestCreateUser(t *testing.T) {
-	us, err := testingUserService()
+	us, err := testinguserGorm()
 	if err != nil {
 		t.Fatal(err)
 	}
