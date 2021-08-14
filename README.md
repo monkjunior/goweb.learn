@@ -480,3 +480,17 @@ Start godoc server:
 godoc -http=:<port>
 ```
 We might want to expost interf ace document like UserDB but not a specific implementation like userGorm.
+
+# [Go Proverbs](https://go-proverbs.github.io/)
+
+Make the zero value useful
+
+- Init zero value like *text/tabwriter* package
+
+- Unexpoted type
+
+- Export interface like *hash* packages
+
+Other suggestions:
+
+- Return structs except interfaces. Allow receiving data to be as much flexibility as posible and when it comes to returning, you might want it as much specific as posible.

@@ -9,7 +9,7 @@ import (
 	"github.com/monkjunior/goweb.learn/views"
 )
 
-func NewUsers(us *models.UserService) *Users {
+func NewUsers(us models.UserService) *Users {
 	return &Users{
 		NewView:   views.NewView("bootstrap", "users/new"),
 		LoginView: views.NewView("bootstrap", "users/login"),
@@ -20,7 +20,7 @@ func NewUsers(us *models.UserService) *Users {
 type Users struct {
 	NewView   *views.View
 	LoginView *views.View
-	us        *models.UserService
+	us        models.UserService
 }
 
 // This is used to render the form where a user can create
