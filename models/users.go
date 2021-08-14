@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 
@@ -20,7 +21,8 @@ var (
 	ErrNotFound        = errors.New("models: resource not found")
 	ErrInvalidID       = errors.New("models: ID provided was invalid")
 	ErrInvalidPassword = errors.New("models: incorrect password provided")
-	ErrMissedEmail     = errors.New("Email address is required")
+	ErrRequiredEmail   = errors.New("models: email address is required")
+	ErrInvalidEmail    = errors.New("models: email provided was invalid")
 )
 
 const (
@@ -90,11 +92,10 @@ func NewUserService(connInfo string) (UserService, error) {
 	}
 
 	hmac := hash.NewHMAC(hmacSecretKey)
+	uVal := newUserValidator(ug, hmac)
+
 	return &userService{
-		UserDB: &userValidator{
-			UserDB: ug,
-			hmac:   hmac,
-		},
+		UserDB: uVal,
 	}, nil
 }
 
@@ -134,9 +135,18 @@ func runUserValFuncs(user *User, fns ...userValFunc) error {
 	return nil
 }
 
+func newUserValidator(udb UserDB, hmac hash.HMAC) *userValidator {
+	return &userValidator{
+		UserDB:     udb,
+		hmac:       hmac,
+		emailRegex: regexp.MustCompile(`^[a-z0-9.%+\-]+@[a-z0-9.\-]+\.[a-z]{2,16}$`),
+	}
+}
+
 type userValidator struct {
 	UserDB
-	hmac hash.HMAC
+	hmac       hash.HMAC
+	emailRegex *regexp.Regexp
 }
 
 // ByEmail will normalize the email address
@@ -145,7 +155,7 @@ func (uv *userValidator) ByEmail(email string) (*User, error) {
 	user := User{
 		Email: email,
 	}
-	if err := runUserValFuncs(&user, uv.normalizeEmail); err != nil {
+	if err := runUserValFuncs(&user, uv.normalizeEmail, uv.emailFormat); err != nil {
 		return nil, err
 	}
 	return uv.UserDB.ByEmail(email)
@@ -172,6 +182,7 @@ func (uv *userValidator) Create(user *User) error {
 		uv.hmacRemember,
 		uv.normalizeEmail,
 		uv.requireEmail,
+		uv.emailFormat,
 	)
 	if err != nil {
 		return err
@@ -186,6 +197,7 @@ func (uv *userValidator) Update(user *User) error {
 		uv.hmacRemember,
 		uv.normalizeEmail,
 		uv.requireEmail,
+		uv.emailFormat,
 	)
 	if err != nil {
 		return err
@@ -260,7 +272,17 @@ func (uv *userValidator) normalizeEmail(user *User) error {
 
 func (uv *userValidator) requireEmail(user *User) error {
 	if user.Email == "" {
-		return ErrMissedEmail
+		return ErrRequiredEmail
+	}
+	return nil
+}
+
+func (uv *userValidator) emailFormat(user *User) error {
+	if user.Email == "" {
+		return nil
+	}
+	if !uv.emailRegex.MatchString(user.Email) {
+		return ErrInvalidEmail
 	}
 	return nil
 }
