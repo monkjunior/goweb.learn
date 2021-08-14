@@ -20,6 +20,7 @@ var (
 	ErrNotFound        = errors.New("models: resource not found")
 	ErrInvalidID       = errors.New("models: ID provided was invalid")
 	ErrInvalidPassword = errors.New("models: incorrect password provided")
+	ErrMissedEmail     = errors.New("Email address is required")
 )
 
 const (
@@ -170,6 +171,7 @@ func (uv *userValidator) Create(user *User) error {
 		uv.setDefaultRemember,
 		uv.hmacRemember,
 		uv.normalizeEmail,
+		uv.requireEmail,
 	)
 	if err != nil {
 		return err
@@ -183,6 +185,7 @@ func (uv *userValidator) Update(user *User) error {
 		uv.bcryptPassword,
 		uv.hmacRemember,
 		uv.normalizeEmail,
+		uv.requireEmail,
 	)
 	if err != nil {
 		return err
@@ -252,6 +255,13 @@ func (uv *userValidator) idGreaterThan(n uint) userValFunc {
 func (uv *userValidator) normalizeEmail(user *User) error {
 	user.Email = strings.ToLower(user.Email)
 	user.Email = strings.TrimSpace(user.Email)
+	return nil
+}
+
+func (uv *userValidator) requireEmail(user *User) error {
+	if user.Email == "" {
+		return ErrMissedEmail
+	}
 	return nil
 }
 
