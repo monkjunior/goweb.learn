@@ -469,3 +469,14 @@ THE MAGIC OF INTERFACES !!
 [Go interface](https://youtu.be/qJKQZKGZgf0)
 
 [All about Go](https://youtu.be/s_gRXOsrDAA)
+
+Static types vs interface:
+
+- Static types could make you harder to swap out between different layers. Less dynamic!
+
+Start godoc server:
+
+```bash
+godoc -http=:<port>
+```
+We might want to expost interf ace document like UserDB but not a specific implementation like userGorm.
