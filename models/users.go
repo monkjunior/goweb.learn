@@ -168,10 +168,12 @@ func (uv *userValidator) Update(user *User) error {
 
 // Delete will delete the user with the provided ID
 func (uv *userValidator) Delete(ID uint) error {
-	if ID == 0 {
-		return ErrInvalidID
+	var user User
+	user.ID = ID
+	if err := runUserValFuncs(&user, uv.idGreaterThan(0)); err != nil {
+		return err
 	}
-	return uv.UserDB.Delete(ID)
+	return uv.UserDB.Delete(user.ID)
 }
 
 // bcryptPassword will hash a user's password with the
@@ -212,6 +214,15 @@ func (uv *userValidator) setDefaultRemember(user *User) error {
 	}
 	user.Remember = token
 	return nil
+}
+
+func (uv *userValidator) idGreaterThan(n uint) userValFunc {
+	return func(u *User) error {
+		if u.ID <= n {
+			return ErrInvalidID
+		}
+		return nil
+	}
 }
 
 func newUserGorm(connInfo string) (*userGorm, error) {
