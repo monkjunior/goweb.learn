@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/monkjunior/goweb.learn/hash"
@@ -137,8 +138,20 @@ type userValidator struct {
 	hmac hash.HMAC
 }
 
-// By Remember will hash the remember token and then call
-// By Remember on the subsequent UserDB layer.
+// ByEmail will normalize the email address
+// before call ByEmail in the UserDB field.
+func (uv *userValidator) ByEmail(email string) (*User, error) {
+	user := User{
+		Email: email,
+	}
+	if err := runUserValFuncs(&user, uv.normalizeEmail); err != nil {
+		return nil, err
+	}
+	return uv.UserDB.ByEmail(email)
+}
+
+// ByRemember will hash the remember token and then call
+// ByRemember on the subsequent UserDB layer.
 func (uv *userValidator) ByRemember(token string) (*User, error) {
 	user := User{
 		Remember: token,
@@ -152,7 +165,13 @@ func (uv *userValidator) ByRemember(token string) (*User, error) {
 // Create will create the provided user and backfill data
 // like the ID, CreatedAt, and UpdatedAt fields.
 func (uv *userValidator) Create(user *User) error {
-	if err := runUserValFuncs(user, uv.bcryptPassword, uv.setDefaultRemember, uv.hmacRemember); err != nil {
+	err := runUserValFuncs(user,
+		uv.bcryptPassword,
+		uv.setDefaultRemember,
+		uv.hmacRemember,
+		uv.normalizeEmail,
+	)
+	if err != nil {
 		return err
 	}
 	return uv.UserDB.Create(user)
@@ -160,7 +179,12 @@ func (uv *userValidator) Create(user *User) error {
 
 // Update will hash a remember token if it is provided.
 func (uv *userValidator) Update(user *User) error {
-	if err := runUserValFuncs(user, uv.bcryptPassword, uv.hmacRemember); err != nil {
+	err := runUserValFuncs(user,
+		uv.bcryptPassword,
+		uv.hmacRemember,
+		uv.normalizeEmail,
+	)
+	if err != nil {
 		return err
 	}
 	return uv.UserDB.Update(user)
@@ -223,6 +247,12 @@ func (uv *userValidator) idGreaterThan(n uint) userValFunc {
 		}
 		return nil
 	}
+}
+
+func (uv *userValidator) normalizeEmail(user *User) error {
+	user.Email = strings.ToLower(user.Email)
+	user.Email = strings.TrimSpace(user.Email)
+	return nil
 }
 
 func newUserGorm(connInfo string) (*userGorm, error) {
