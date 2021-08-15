@@ -17,19 +17,6 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-var (
-	ErrNotFound          = errors.New("models: resource not found")
-	ErrIDInvalid         = errors.New("models: ID provided was invalid")
-	ErrEmailRequired     = errors.New("models: email address is required")
-	ErrEmailInvalid      = errors.New("models: email provided was invalid")
-	ErrEmailIsTaken      = errors.New("models: email address has already taken")
-	ErrPasswordIncorrect = errors.New("models: incorrect password provided")
-	ErrPasswordRequired  = errors.New("models: password is required")
-	ErrPasswordTooShort  = errors.New("models: password must be at least 8 charaters")
-	ErrRememberRequired  = errors.New("models: remember is required")
-	ErrRememberTooShort  = errors.New("models: remember token must be at least 32 bytes")
-)
-
 const (
 	userPwPepper  = "ted-is-so-handsome"
 	hmacSecretKey = "secret-hmac-key"
