@@ -5,6 +5,8 @@ const (
 	AlertLvWarning = "warning"
 	AlertLvInfo    = "info"
 	AlertLvSuccess = "success"
+
+	AlertMsgGeneric = "Something went wrong. Please try again, and contact us if the problem persists."
 )
 
 // Alert is used to render bootstrap alert messages in templates.
