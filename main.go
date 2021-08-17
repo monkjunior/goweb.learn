@@ -30,6 +30,7 @@ func main() {
 
 	staticC := controllers.NewStatic()
 	usersC := controllers.NewUsers(service.User)
+	galleriesC := controllers.NewGalleries(service.Gallery)
 
 	r := mux.NewRouter()
 	r.Handle("/", staticC.Home).Methods("GET")
@@ -39,6 +40,9 @@ func main() {
 	r.HandleFunc("/login", usersC.GetLogin).Methods("GET")
 	r.HandleFunc("/login", usersC.PostLogin).Methods("POST")
 	r.HandleFunc("/cookietest", usersC.CookieTest).Methods("GET")
+
+	//Gallery route
+	r.HandleFunc("/galleries/new", galleriesC.New).Methods("GET")
 	fmt.Println("Starting server on port 8080")
 	http.ListenAndServe(":8080", r)
 }
