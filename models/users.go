@@ -2,19 +2,14 @@ package models
 
 import (
 	"errors"
-	"log"
-	"os"
 	"regexp"
 	"strings"
-	"time"
 
 	"github.com/monkjunior/goweb.learn/hash"
 	"github.com/monkjunior/goweb.learn/rand"
 
 	"golang.org/x/crypto/bcrypt"
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 const (
@@ -77,10 +72,9 @@ type UserService interface {
 	UserDB
 }
 
-func NewUserService(connInfo string) (UserService, error) {
-	ug, err := newUserGorm(connInfo)
-	if err != nil {
-		return nil, err
+func NewUserService(db *gorm.DB) UserService {
+	ug := &userGorm{
+		db: db,
 	}
 
 	hmac := hash.NewHMAC(hmacSecretKey)
@@ -88,7 +82,7 @@ func NewUserService(connInfo string) (UserService, error) {
 
 	return &userService{
 		UserDB: uVal,
-	}, nil
+	}
 }
 
 type userService struct {
@@ -347,27 +341,6 @@ func (uv *userValidator) rememberHashRequired(user *User) error {
 		return ErrRememberRequired
 	}
 	return nil
-}
-
-func newUserGorm(connInfo string) (*userGorm, error) {
-	db, err := gorm.Open(postgres.Open(connInfo), &gorm.Config{
-		Logger: logger.New(
-			log.New(os.Stdout, "\r\n", log.LstdFlags),
-			logger.Config{
-				SlowThreshold:             time.Second, // Slow SQL threshold
-				LogLevel:                  logger.Info, // Log level
-				IgnoreRecordNotFoundError: false,       // Ignore ErrRecordNotFound error for logger
-				Colorful:                  true,        // Disable color
-			},
-		),
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	return &userGorm{
-		db: db,
-	}, nil
 }
 
 type userGorm struct {

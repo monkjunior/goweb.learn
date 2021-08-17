@@ -494,3 +494,10 @@ Make the zero value useful
 Other suggestions:
 
 - Return structs except interfaces. Allow receiving data to be as much flexibility as posible and when it comes to returning, you might want it as much specific as posible.
+
+# Coding galleries feature
+
+I might learn a lot from here!
+
+- Creating an empty inteface{} when we start, because we do not know which methods will be needed.
+- 
