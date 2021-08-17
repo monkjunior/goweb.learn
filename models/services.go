@@ -27,11 +27,36 @@ func NewServices(connInfo string) (*Services, error) {
 	}
 
 	return &Services{
+		db:   db,
 		User: NewUserService(db),
 	}, nil
 }
 
 type Services struct {
+	db      *gorm.DB
 	Gallery GalleryService
 	User    UserService
+}
+
+// Closes the database connection.
+func (s *Services) Close() error {
+	gDB, err := s.db.DB()
+	if err != nil {
+		return err
+	}
+	return gDB.Close()
+}
+
+// DestructiveReset drops all tables and rebuilds them
+func (s *Services) DestructiveReset() error {
+	err := s.db.Migrator().DropTable(&User{}, &Gallery{})
+	if err != nil {
+		return err
+	}
+	return s.db.AutoMigrate(&User{}, &Gallery{})
+}
+
+// AutoMigrate will attempt to automatically migrate all table
+func (s *Services) AutoMigrate() error {
+	return s.db.AutoMigrate(&User{}, &Gallery{})
 }
