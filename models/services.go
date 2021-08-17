@@ -27,8 +27,9 @@ func NewServices(connInfo string) (*Services, error) {
 	}
 
 	return &Services{
-		db:   db,
-		User: NewUserService(db),
+		db:      db,
+		User:    NewUserService(db),
+		Gallery: NewGalleryService(db),
 	}, nil
 }
 
