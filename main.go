@@ -6,6 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/monkjunior/goweb.learn/controllers"
+	"github.com/monkjunior/goweb.learn/middleware"
 	"github.com/monkjunior/goweb.learn/models"
 )
 
@@ -32,6 +33,10 @@ func main() {
 	usersC := controllers.NewUsers(service.User)
 	galleriesC := controllers.NewGalleries(service.Gallery)
 
+	requireUserMw := middleware.RequireUser{
+		UserService: service.User,
+	}
+
 	r := mux.NewRouter()
 	r.Handle("/", staticC.Home).Methods("GET")
 	r.Handle("/contact", staticC.Contact).Methods("GET")
@@ -42,8 +47,8 @@ func main() {
 	r.HandleFunc("/cookietest", usersC.CookieTest).Methods("GET")
 
 	//Gallery route
-	r.HandleFunc("/galleries/new", galleriesC.New).Methods("GET")
-	r.HandleFunc("/galleries/new", galleriesC.Create).Methods("POST")
+	r.HandleFunc("/galleries/new", requireUserMw.Apply(galleriesC.New)).Methods("GET")
+	r.HandleFunc("/galleries/new", requireUserMw.Apply(galleriesC.Create)).Methods("POST")
 	fmt.Println("Starting server on port 8080")
 	http.ListenAndServe(":8080", r)
 }

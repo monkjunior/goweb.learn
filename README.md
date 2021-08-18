@@ -500,4 +500,7 @@ Other suggestions:
 I might learn a lot from here!
 
 - Creating an empty inteface{} when we start, because we do not know which methods will be needed.
-- 
+
+- Okay, now i want to verify if a user is logged in for each request to gallery service. Here we go, learn **middleware**!!
+ 
+    - closure in go: when you dynamically create a function and you can take data from outside of them and use this inside of the function.
