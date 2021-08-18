@@ -43,6 +43,7 @@ func main() {
 
 	//Gallery route
 	r.HandleFunc("/galleries/new", galleriesC.New).Methods("GET")
+	r.HandleFunc("/galleries/new", galleriesC.Create).Methods("POST")
 	fmt.Println("Starting server on port 8080")
 	http.ListenAndServe(":8080", r)
 }
