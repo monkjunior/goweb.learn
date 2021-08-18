@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/monkjunior/goweb.learn/context"
 	"github.com/monkjunior/goweb.learn/models"
 )
 
@@ -23,6 +24,9 @@ func (mw *RequireUser) Apply(next http.HandlerFunc) http.HandlerFunc {
 			http.Redirect(w, r, "/login", http.StatusFound)
 			return
 		}
+		ctx := r.Context()
+		ctx = context.WithUser(ctx, user)
+		r = r.WithContext(ctx)
 		fmt.Printf("User found: %+v\n", user)
 		next(w, r)
 	})

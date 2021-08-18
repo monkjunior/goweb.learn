@@ -504,3 +504,11 @@ I might learn a lot from here!
 - Okay, now i want to verify if a user is logged in for each request to gallery service. Here we go, learn **middleware**!!
  
     - closure in go: when you dynamically create a function and you can take data from outside of them and use this inside of the function.
+
+- context package
+
+    - It is not just used for http package, but it likes a general tool
+
+    - [Just For Func](https://youtu.be/LSzR0VEraWw)
+
+    - Request type in HTTP package have a method Context, every request have a context attach to it
