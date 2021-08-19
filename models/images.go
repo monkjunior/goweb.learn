@@ -41,6 +41,10 @@ func (i *imageService) ByGalleryID(galleryID uint) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
+	// Add a leading "/" to all image file paths
+	for i := range strings {
+		strings[i] = "/" + strings[i]
+	}
 	return strings, nil
 }
 
