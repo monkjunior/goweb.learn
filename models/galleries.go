@@ -16,6 +16,7 @@ type GalleryService interface {
 type GalleryDB interface {
 	// Methods for querying for a single gallery
 	ByID(id uint) (*Gallery, error)
+	ByUserID(userID uint) ([]Gallery, error)
 
 	// Methods for altering galleries
 	Create(gallery *Gallery) error
@@ -120,6 +121,15 @@ func (gg *galleryGorm) ByID(id uint) (*Gallery, error) {
 		return nil, err
 	}
 	return &gallery, err
+}
+
+// ByUserID will list all galleries that belong to the user provided ID.
+func (gg *galleryGorm) ByUserID(userID uint) ([]Gallery, error) {
+	var galleries []Gallery
+	if err := gg.db.Where("user_id = ?", userID).Find(&galleries).Error; err != nil {
+		return nil, err
+	}
+	return galleries, nil
 }
 
 // Create will create the provided gallery and backfill data

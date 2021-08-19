@@ -48,10 +48,11 @@ func main() {
 	r.HandleFunc("/cookietest", usersC.CookieTest).Methods("GET")
 
 	//Gallery route
+	r.HandleFunc("/galleries", requireUserMw.Apply(galleriesC.Index)).Methods("GET")
 	r.HandleFunc("/galleries/new", requireUserMw.Apply(galleriesC.New)).Methods("GET")
 	r.HandleFunc("/galleries/new", requireUserMw.Apply(galleriesC.Create)).Methods("POST")
 	r.HandleFunc("/galleries/{id:[0-9]+}", requireUserMw.Apply(galleriesC.Show)).Methods("GET").Name(controllers.ShowGallery)
-	r.HandleFunc("/galleries/{id:[0-9]+}/update", requireUserMw.Apply(galleriesC.GetUpdate)).Methods("GET")
+	r.HandleFunc("/galleries/{id:[0-9]+}/update", requireUserMw.Apply(galleriesC.GetUpdate)).Methods("GET").Name(controllers.UpdateGallery)
 	r.HandleFunc("/galleries/{id:[0-9]+}/update", requireUserMw.Apply(galleriesC.PostUpdate)).Methods("POST")
 	r.HandleFunc("/galleries/{id:[0-9]+}/delete", requireUserMw.Apply(galleriesC.Delete)).Methods("POST")
 

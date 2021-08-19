@@ -13,7 +13,8 @@ import (
 )
 
 const (
-	ShowGallery = "show_gallery"
+	ShowGallery   = "show_gallery"
+	UpdateGallery = "update_gallery"
 )
 
 func NewGalleries(gs models.GalleryService, r mux.Router) *Galleries {
@@ -21,6 +22,7 @@ func NewGalleries(gs models.GalleryService, r mux.Router) *Galleries {
 		NewView:    views.NewView("bootstrap", "galleries/new"),
 		ShowView:   views.NewView("bootstrap", "galleries/show"),
 		UpdateView: views.NewView("bootstrap", "galleries/update"),
+		IndexView:  views.NewView("bootstrap", "galleries/index"),
 		gs:         gs,
 		r:          r,
 	}
@@ -30,6 +32,7 @@ type Galleries struct {
 	NewView    *views.View
 	ShowView   *views.View
 	UpdateView *views.View
+	IndexView  *views.View
 	gs         models.GalleryService
 	r          mux.Router
 }
@@ -44,6 +47,21 @@ func (g *Galleries) New(w http.ResponseWriter, r *http.Request) {
 
 type GalleryForm struct {
 	Title string `schema:"title"`
+}
+
+// Index list all the gallery that user has access to.
+//
+// GET /galleries
+func (g *Galleries) Index(w http.ResponseWriter, r *http.Request) {
+	user := context.User(r.Context())
+	galleries, err := g.gs.ByUserID(user.ID)
+	if err != nil {
+		http.Error(w, "Something went wrong", http.StatusInternalServerError)
+		return
+	}
+	var vd views.Data
+	vd.Yield = galleries
+	g.IndexView.Render(w, vd)
 }
 
 // Show will look up and show the gallery with specific ID
@@ -123,7 +141,7 @@ func (g *Galleries) PostUpdate(w http.ResponseWriter, r *http.Request) {
 // Delete will update the gallery edit page
 //
 // POST /galleries/:id/delete
-func (g *Galleries) Delete (w http.ResponseWriter, r *http.Request) {
+func (g *Galleries) Delete(w http.ResponseWriter, r *http.Request) {
 	gallery, err := g.galleryByID(w, r)
 	if err != nil {
 		return
@@ -141,8 +159,7 @@ func (g *Galleries) Delete (w http.ResponseWriter, r *http.Request) {
 		g.UpdateView.Render(w, vd)
 		return
 	}
-	// TODO Redirect page
-	fmt.Fprintln(w, "Successfully deleted")
+	http.Redirect(w, r, "/galleries", http.StatusFound)
 }
 
 // Create is used to process gallery form when a user tries to
@@ -171,7 +188,7 @@ func (g *Galleries) Create(w http.ResponseWriter, r *http.Request) {
 		g.NewView.Render(w, vd)
 		return
 	}
-	url, err := g.r.Get(ShowGallery).URL("id", fmt.Sprintf("%v", gallery.ID))
+	url, err := g.r.Get(UpdateGallery).URL("id", fmt.Sprintf("%v", gallery.ID))
 	if err != nil {
 		// TODO: make this go to the index page
 		http.Redirect(w, r, "/", http.StatusFound)
