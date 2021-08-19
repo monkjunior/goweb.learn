@@ -19,6 +19,7 @@ type GalleryDB interface {
 
 	// Methods for altering galleries
 	Create(gallery *Gallery) error
+	Update(gallery *Gallery) error
 }
 
 func NewGalleryService(db *gorm.DB) GalleryService {
@@ -61,6 +62,17 @@ func (gv *galleryValidator) Create(gallery *Gallery) error {
 	return gv.GalleryDB.Create(gallery)
 }
 
+func (gv *galleryValidator) Update(gallery *Gallery) error {
+	err := runGalleryValFuncs(gallery,
+		gv.titleRequired,
+		gv.userIDRequired,
+	)
+	if err != nil {
+		return err
+	}
+	return gv.GalleryDB.Update(gallery)
+}
+
 func (gv *galleryValidator) titleRequired(gallery *Gallery) error {
 	if gallery.Title == "" {
 		return ErrTitleRequired
@@ -94,4 +106,10 @@ func (gg *galleryGorm) ByID(id uint) (*Gallery, error) {
 // like the ID, CreatedAt, and UpdatedAt fields.
 func (gg *galleryGorm) Create(gallery *Gallery) error {
 	return gg.db.Create(gallery).Error
+}
+
+// Update will update the provided gallery with all of the data
+// in the provided gallery object.
+func (gg *galleryGorm) Update(gallery *Gallery) error {
+	return gg.db.Save(gallery).Error
 }

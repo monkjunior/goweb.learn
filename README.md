@@ -512,3 +512,5 @@ I might learn a lot from here!
     - [Just For Func](https://youtu.be/LSzR0VEraWw)
 
     - Request type in HTTP package have a method Context, every request have a context attach to it
+    
+- alert can be only stick in one web request, try flash message instead if you want to display notice between redirects

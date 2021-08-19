@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -105,7 +106,18 @@ func (g *Galleries) PostUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	gallery.Title = form.Title
-	fmt.Fprintln(w, gallery)
+	err = g.gs.Update(gallery)
+	if err != nil {
+		log.Println(err)
+		vd.SetAlert(err)
+		g.UpdateView.Render(w, r)
+		return
+	}
+	vd.Alert = &views.Alert{
+		Level:   views.AlertLvSuccess,
+		Message: "Gallery successfully updated",
+	}
+	g.UpdateView.Render(w, vd)
 }
 
 // Create is used to process gallery form when a user tries to
