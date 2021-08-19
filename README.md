@@ -514,3 +514,7 @@ I might learn a lot from here!
     - Request type in HTTP package have a method Context, every request have a context attach to it
     
 - alert can be only stick in one web request, try flash message instead if you want to display notice between redirects
+
+- We abstract the way we process images by using io.Reader. It is an interface then you can use it with many ways of implementation like local files, dropbox, and so on.
+
+

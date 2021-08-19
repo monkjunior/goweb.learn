@@ -30,6 +30,7 @@ func NewServices(connInfo string) (*Services, error) {
 		db:      db,
 		User:    NewUserService(db),
 		Gallery: NewGalleryService(db),
+		Image:   NewImageService(),
 	}, nil
 }
 
@@ -37,6 +38,7 @@ type Services struct {
 	db      *gorm.DB
 	Gallery GalleryService
 	User    UserService
+	Image   ImageService
 }
 
 // Closes the database connection.

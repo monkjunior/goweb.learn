@@ -2,10 +2,8 @@ package controllers
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/gorilla/mux"
@@ -22,13 +20,14 @@ const (
 	maxMultipartMem = 1 << 20
 )
 
-func NewGalleries(gs models.GalleryService, r mux.Router) *Galleries {
+func NewGalleries(gs models.GalleryService, is models.ImageService, r mux.Router) *Galleries {
 	return &Galleries{
 		NewView:    views.NewView("bootstrap", "galleries/new"),
 		ShowView:   views.NewView("bootstrap", "galleries/show"),
 		UpdateView: views.NewView("bootstrap", "galleries/update"),
 		IndexView:  views.NewView("bootstrap", "galleries/index"),
 		gs:         gs,
+		is:         is,
 		r:          r,
 	}
 }
@@ -39,10 +38,11 @@ type Galleries struct {
 	UpdateView *views.View
 	IndexView  *views.View
 	gs         models.GalleryService
+	is         models.ImageService
 	r          mux.Router
 }
 
-// This is used to render the form where a user can create
+// New is used to render the form where a user can create
 // a new gallery
 //
 // GET /galleries/new
@@ -159,18 +159,9 @@ func (g *Galleries) ImageUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: Parse a multi part form
 	var vd views.Data
 	vd.Yield = gallery
 	err = r.ParseMultipartForm(maxMultipartMem)
-	if err != nil {
-		vd.SetAlert(err)
-		g.UpdateView.Render(w, r, vd)
-		return
-	}
-
-	galleryPath := fmt.Sprintf("images/galleries/%v/", gallery.ID)
-	err = os.MkdirAll(galleryPath, 0755)
 	if err != nil {
 		vd.SetAlert(err)
 		g.UpdateView.Render(w, r, vd)
@@ -184,16 +175,7 @@ func (g *Galleries) ImageUpload(w http.ResponseWriter, r *http.Request) {
 			g.UpdateView.Render(w, r, vd)
 			return
 		}
-		defer file.Close()
-
-		dst, err := os.Create(galleryPath + f.Filename)
-		if err != nil {
-			vd.SetAlert(err)
-			g.UpdateView.Render(w, r, vd)
-			return
-		}
-
-		_, err = io.Copy(dst, file)
+		err = g.is.Create(gallery.ID, file, f.Filename)
 		if err != nil {
 			vd.SetAlert(err)
 			g.UpdateView.Render(w, r, vd)

@@ -33,7 +33,7 @@ func main() {
 
 	staticC := controllers.NewStatic()
 	usersC := controllers.NewUsers(service.User)
-	galleriesC := controllers.NewGalleries(service.Gallery, *r)
+	galleriesC := controllers.NewGalleries(service.Gallery, service.Image, *r)
 
 	userMw := middleware.User{
 		UserService: service.User,
