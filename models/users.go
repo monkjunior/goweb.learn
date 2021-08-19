@@ -42,7 +42,7 @@ type User struct {
 // For single user queries, any error but ErrNotFound should
 // probably result in a 500 error.
 type UserDB interface {
-	// Methods for querying for single users
+	// Methods for querying for a single user
 	ByID(id uint) (*User, error)
 	ByEmail(email string) (*User, error)
 	ByRemember(token string) (*User, error)

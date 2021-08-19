@@ -14,6 +14,10 @@ type GalleryService interface {
 }
 
 type GalleryDB interface {
+	// Methods for querying for a single gallery
+	ByID(id uint) (*Gallery, error)
+
+	// Methods for altering galleries
 	Create(gallery *Gallery) error
 }
 
@@ -73,6 +77,17 @@ func (gv *galleryValidator) userIDRequired(gallery *Gallery) error {
 
 type galleryGorm struct {
 	db *gorm.DB
+}
+
+// ByID will look up by the provided ID.
+func (gg *galleryGorm) ByID(id uint) (*Gallery, error) {
+	var gallery Gallery
+	db := gg.db.Where("id = ?", id)
+	err := first(db, &gallery)
+	if err != nil {
+		return nil, err
+	}
+	return &gallery, err
 }
 
 // Create will create the provided gallery and backfill data
