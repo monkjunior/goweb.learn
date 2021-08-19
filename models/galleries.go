@@ -20,6 +20,7 @@ type GalleryDB interface {
 	// Methods for altering galleries
 	Create(gallery *Gallery) error
 	Update(gallery *Gallery) error
+	Delete(galleryID uint) error
 }
 
 func NewGalleryService(db *gorm.DB) GalleryService {
@@ -73,6 +74,16 @@ func (gv *galleryValidator) Update(gallery *Gallery) error {
 	return gv.GalleryDB.Update(gallery)
 }
 
+// Delete will delete the gallery with the provided ID
+func (gv *galleryValidator) Delete(ID uint) error {
+	var gallery Gallery
+	gallery.ID = ID
+	if err := runGalleryValFuncs(&gallery, gv.idGreaterThan(0)); err != nil {
+		return err
+	}
+	return gv.GalleryDB.Delete(gallery.ID)
+}
+
 func (gv *galleryValidator) titleRequired(gallery *Gallery) error {
 	if gallery.Title == "" {
 		return ErrTitleRequired
@@ -85,6 +96,15 @@ func (gv *galleryValidator) userIDRequired(gallery *Gallery) error {
 		return ErrUserIDRequired
 	}
 	return nil
+}
+
+func (gv *galleryValidator) idGreaterThan(n uint) galleryValFunc {
+	return func(g *Gallery) error {
+		if g.ID <= n {
+			return ErrIDInvalid
+		}
+		return nil
+	}
 }
 
 type galleryGorm struct {
@@ -112,4 +132,14 @@ func (gg *galleryGorm) Create(gallery *Gallery) error {
 // in the provided gallery object.
 func (gg *galleryGorm) Update(gallery *Gallery) error {
 	return gg.db.Save(gallery).Error
+}
+
+// Delete will delete the gallery with the provided ID
+func (gg *galleryGorm)  Delete(galleryID uint) error {
+	gallery := Gallery{
+		Model: gorm.Model{
+			ID: galleryID,
+		},
+	}
+	return gg.db.Delete(&gallery).Error
 }
