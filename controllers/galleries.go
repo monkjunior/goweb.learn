@@ -82,6 +82,8 @@ func (g *Galleries) Show(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Gallery not found", http.StatusNotFound)
 		return
 	}
+	images, _ := g.is.ByGalleryID(gallery.ID)
+	gallery.Images = images
 	var vd views.Data
 	vd.Yield = gallery
 	g.ShowView.Render(w, r, vd)
@@ -101,6 +103,8 @@ func (g *Galleries) GetUpdate(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Gallery not found", http.StatusNotFound)
 		return
 	}
+	images, _ := g.is.ByGalleryID(gallery.ID)
+	gallery.Images = images
 	var vd views.Data
 	vd.Yield = gallery
 	vd.User = user
@@ -121,6 +125,8 @@ func (g *Galleries) PostUpdate(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Gallery not found", http.StatusNotFound)
 		return
 	}
+	images, _ := g.is.ByGalleryID(gallery.ID)
+	gallery.Images = images
 	var vd views.Data
 	var form GalleryForm
 	vd.Yield = gallery
@@ -182,8 +188,12 @@ func (g *Galleries) ImageUpload(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-
-	fmt.Fprintln(w, "Files successfully uploaded")
+	url, err := g.r.Get(UpdateGallery).URL("id", fmt.Sprintf("%v", gallery.ID))
+	if err != nil {
+		http.Redirect(w, r, "/galleries", http.StatusFound)
+		return
+	}
+	http.Redirect(w, r, url.Path, http.StatusFound)
 }
 
 // Delete will update the gallery edit page
