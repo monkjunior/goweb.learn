@@ -254,6 +254,45 @@ func (g *Galleries) Create(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, url.String(), http.StatusFound)
 }
 
+// ImageDelete will delete the selected image
+//
+// POST /galleries/:id/images/:filename/delete
+func (g *Galleries) ImageDelete(w http.ResponseWriter, r *http.Request) {
+	gallery, err := g.galleryByID(w, r)
+	if err != nil {
+		return
+	}
+	user := context.User(r.Context())
+	if gallery.UserID != user.ID {
+		http.Error(w, "You do not have permission to edit "+
+			"this gallery or image", http.StatusForbidden)
+		return
+	}
+	filename := mux.Vars(r)["filename"]
+	// Build the Image model
+	i := models.Image{
+		Filename:  filename,
+		GalleryID: gallery.ID,
+	}
+	// Try to delete the image.
+	err = g.is.Delete(&i)
+	if err != nil {
+		// Render the edit page with any errors.
+		var vd views.Data
+		vd.Yield = gallery
+		vd.SetAlert(err)
+		g.UpdateView.Render(w, r, vd)
+		return
+	}
+	// If all goes well, redirect to the edit gallery page.
+	url, err := g.r.Get(UpdateGallery).URL("id", fmt.Sprintf("%v", gallery.ID))
+	if err != nil {
+		http.Redirect(w, r, "/galleries", http.StatusFound)
+		return
+	}
+	http.Redirect(w, r, url.Path, http.StatusFound)
+}
+
 func (g *Galleries) galleryByID(w http.ResponseWriter, r *http.Request) (*models.Gallery, error) {
 	vars := mux.Vars(r)
 	idStr := vars["id"]
