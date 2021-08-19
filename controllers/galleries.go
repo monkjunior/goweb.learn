@@ -12,8 +12,7 @@ import (
 )
 
 const (
-	ShowGallery   = "show_gallery"
-	UpdateGallery = "update_gallery"
+	ShowGallery = "show_gallery"
 )
 
 func NewGalleries(gs models.GalleryService, r mux.Router) *Galleries {
@@ -64,10 +63,10 @@ func (g *Galleries) Show(w http.ResponseWriter, r *http.Request) {
 	g.ShowView.Render(w, vd)
 }
 
-// Edit will render the gallery edit page
+// GetUpdate will load the update gallery page
 //
 // GET /galleries/:id/update
-func (g *Galleries) Update(w http.ResponseWriter, r *http.Request) {
+func (g *Galleries) GetUpdate(w http.ResponseWriter, r *http.Request) {
 	gallery, err := g.galleryByID(w, r)
 	if err != nil {
 		return
@@ -81,6 +80,32 @@ func (g *Galleries) Update(w http.ResponseWriter, r *http.Request) {
 	var vd views.Data
 	vd.Yield = gallery
 	g.UpdateView.Render(w, vd)
+}
+
+// PostUpdate will update the gallery edit page
+//
+// POST /galleries/:id/update
+func (g *Galleries) PostUpdate(w http.ResponseWriter, r *http.Request) {
+	gallery, err := g.galleryByID(w, r)
+	if err != nil {
+		return
+	}
+
+	user := context.User(r.Context())
+	if gallery.UserID != user.ID {
+		http.Error(w, "Gallery not found", http.StatusNotFound)
+		return
+	}
+	var vd views.Data
+	var form GalleryForm
+	vd.Yield = gallery
+	if err := parseForm(r, &form); err != nil {
+		vd.SetAlert(err)
+		g.UpdateView.Render(w, vd)
+		return
+	}
+	gallery.Title = form.Title
+	fmt.Fprintln(w, gallery)
 }
 
 // Create is used to process gallery form when a user tries to

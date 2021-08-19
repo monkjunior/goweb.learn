@@ -51,7 +51,8 @@ func main() {
 	r.HandleFunc("/galleries/new", requireUserMw.Apply(galleriesC.New)).Methods("GET")
 	r.HandleFunc("/galleries/new", requireUserMw.Apply(galleriesC.Create)).Methods("POST")
 	r.HandleFunc("/galleries/{id:[0-9]+}", requireUserMw.Apply(galleriesC.Show)).Methods("GET").Name(controllers.ShowGallery)
-	r.HandleFunc("/galleries/{id:[0-9]+}/update", requireUserMw.Apply(galleriesC.Update)).Methods("GET").Name(controllers.UpdateGallery)
+	r.HandleFunc("/galleries/{id:[0-9]+}/update", requireUserMw.Apply(galleriesC.GetUpdate)).Methods("GET")
+	r.HandleFunc("/galleries/{id:[0-9]+}/update", requireUserMw.Apply(galleriesC.PostUpdate)).Methods("POST")
 
 	fmt.Println("Starting server on port 8080")
 	http.ListenAndServe(":8080", r)
