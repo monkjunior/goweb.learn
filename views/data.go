@@ -1,5 +1,7 @@
 package views
 
+import "github.com/monkjunior/goweb.learn/models"
+
 const (
 	AlertLvError   = "danger"
 	AlertLvWarning = "warning"
@@ -19,6 +21,7 @@ type Alert struct {
 // to come in.
 type Data struct {
 	Alert *Alert
+	User  *models.User
 	Yield interface{}
 }
 

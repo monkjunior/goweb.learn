@@ -145,7 +145,7 @@ func (gg *galleryGorm) Update(gallery *Gallery) error {
 }
 
 // Delete will delete the gallery with the provided ID
-func (gg *galleryGorm)  Delete(galleryID uint) error {
+func (gg *galleryGorm) Delete(galleryID uint) error {
 	gallery := Gallery{
 		Model: gorm.Model{
 			ID: galleryID,

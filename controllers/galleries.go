@@ -42,7 +42,7 @@ type Galleries struct {
 //
 // GET /galleries/new
 func (g *Galleries) New(w http.ResponseWriter, r *http.Request) {
-	g.NewView.Render(w, nil)
+	g.NewView.Render(w, r, nil)
 }
 
 type GalleryForm struct {
@@ -61,7 +61,7 @@ func (g *Galleries) Index(w http.ResponseWriter, r *http.Request) {
 	}
 	var vd views.Data
 	vd.Yield = galleries
-	g.IndexView.Render(w, vd)
+	g.IndexView.Render(w, r, vd)
 }
 
 // Show will look up and show the gallery with specific ID
@@ -79,7 +79,7 @@ func (g *Galleries) Show(w http.ResponseWriter, r *http.Request) {
 	}
 	var vd views.Data
 	vd.Yield = gallery
-	g.ShowView.Render(w, vd)
+	g.ShowView.Render(w, r, vd)
 }
 
 // GetUpdate will load the update gallery page
@@ -98,7 +98,8 @@ func (g *Galleries) GetUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 	var vd views.Data
 	vd.Yield = gallery
-	g.UpdateView.Render(w, vd)
+	vd.User = user
+	g.UpdateView.Render(w, r, vd)
 }
 
 // PostUpdate will update the gallery edit page
@@ -120,7 +121,7 @@ func (g *Galleries) PostUpdate(w http.ResponseWriter, r *http.Request) {
 	vd.Yield = gallery
 	if err := parseForm(r, &form); err != nil {
 		vd.SetAlert(err)
-		g.UpdateView.Render(w, vd)
+		g.UpdateView.Render(w, r, vd)
 		return
 	}
 	gallery.Title = form.Title
@@ -128,14 +129,14 @@ func (g *Galleries) PostUpdate(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 		vd.SetAlert(err)
-		g.UpdateView.Render(w, r)
+		g.UpdateView.Render(w, r, vd)
 		return
 	}
 	vd.Alert = &views.Alert{
 		Level:   views.AlertLvSuccess,
 		Message: "Gallery successfully updated",
 	}
-	g.UpdateView.Render(w, vd)
+	g.UpdateView.Render(w, r, vd)
 }
 
 // Delete will update the gallery edit page
@@ -156,7 +157,7 @@ func (g *Galleries) Delete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		vd.SetAlert(err)
 		vd.Yield = gallery
-		g.UpdateView.Render(w, vd)
+		g.UpdateView.Render(w, r, vd)
 		return
 	}
 	http.Redirect(w, r, "/galleries", http.StatusFound)
@@ -171,7 +172,7 @@ func (g *Galleries) Create(w http.ResponseWriter, r *http.Request) {
 	var form GalleryForm
 	if err := parseForm(r, &form); err != nil {
 		vd.SetAlert(err)
-		g.NewView.Render(w, vd)
+		g.NewView.Render(w, r, vd)
 		return
 	}
 	user := context.User(r.Context())
@@ -185,13 +186,12 @@ func (g *Galleries) Create(w http.ResponseWriter, r *http.Request) {
 	}
 	if err := g.gs.Create(&gallery); err != nil {
 		vd.SetAlert(err)
-		g.NewView.Render(w, vd)
+		g.NewView.Render(w, r, vd)
 		return
 	}
 	url, err := g.r.Get(UpdateGallery).URL("id", fmt.Sprintf("%v", gallery.ID))
 	if err != nil {
-		// TODO: make this go to the index page
-		http.Redirect(w, r, "/", http.StatusFound)
+		http.Redirect(w, r, "/galleries", http.StatusFound)
 		return
 	}
 	http.Redirect(w, r, url.String(), http.StatusFound)
