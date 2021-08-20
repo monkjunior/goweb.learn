@@ -530,3 +530,20 @@ I might learn a lot from here!
     - Generate a csrfToken and put it in hidden field
 
 - Do not store secrets in your source code
+
+# Complete steps
+
+Logout
+
+- Delete cookies
+
+- Update remember_token
+
+Redirecting with alert. Example: when user signup, if it succeeds, we want to redirect them to the galleries page with a success alert.
+Otherwise, we also want to notify how the process signing up went wrong.
+
+- Persist alerts between requests!
+ 
+- Make our own `Redirect` function to simplify this process
+
+- Update our `Render` method to look for saved alerts
