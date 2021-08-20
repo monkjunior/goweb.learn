@@ -14,7 +14,12 @@ import (
 func main() {
 	cfg := DefaultConfig()
 	dbConfig := DefaultPostgresConfig()
-	service, err := models.NewServices(dbConfig.ConnectionInfo())
+	service, err := models.NewServices(
+		models.WithGorm(dbConfig.ConnectionInfo()),
+		models.WithUser(cfg.HMACKey, cfg.Pepper),
+		models.WithGallery(),
+		models.WithImage(),
+	)
 	if err != nil {
 		panic(err)
 	}
