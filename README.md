@@ -547,3 +547,6 @@ Otherwise, we also want to notify how the process signing up went wrong.
 - Make our own `Redirect` function to simplify this process
 
 - Update our `Render` method to look for saved alerts
+
+    - We will store alerts in cookies, everytime we use `http.Cookie`, we need `http.ResponseWriter`\
+  
