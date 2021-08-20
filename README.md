@@ -550,3 +550,17 @@ Otherwise, we also want to notify how the process signing up went wrong.
 
     - We will store alerts in cookies, everytime we use `http.Cookie`, we need `http.ResponseWriter`\
   
+## Emailing users
+
+- [Mailgun](https://www.mailgun.com) is an API that allow you to send email fairly easily.
+
+  - We will use a sandbox domain (fake domain).
+  
+  - It gives you 5000 emails in 3 months for free.
+  
+  - Alternative choice: [Sendgrid](https://sendgrid.com/)
+  
+- We are using it over the `net/smtp` package, mostly because setting up your own mailing server and make it sure it does not
+get block by spam filter.
+  
+- Mailgun package `go get gopkg.in/mailgun/mailgun-go.v1`

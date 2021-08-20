@@ -7,3 +7,6 @@ tmp/
 
 #Images Data
 images/
+
+#Config file
+.config
