@@ -48,6 +48,10 @@ func main() {
 	r.HandleFunc("/login", usersC.PostLogin).Methods("POST")
 	r.HandleFunc("/cookietest", usersC.CookieTest).Methods("GET")
 
+	// Assets
+	assetsHandler := http.FileServer(http.Dir("./assets/"))
+	r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", assetsHandler))
+
 	//Image route
 	imageHandler := http.FileServer(http.Dir("./images/"))
 	r.PathPrefix("/images/").Handler(http.StripPrefix("/images/", imageHandler))
