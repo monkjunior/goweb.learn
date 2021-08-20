@@ -9,6 +9,10 @@
     "user": "ted",
     "password": "your-password",
     "name": "goweb_dev"
-  }
-  
+  },
+  "mailgun": {
+      "api_key": "",
+      "public_api_key": "",
+      "domain": ""
+   }
 }

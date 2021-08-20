@@ -563,4 +563,20 @@ Otherwise, we also want to notify how the process signing up went wrong.
 - We are using it over the `net/smtp` package, mostly because setting up your own mailing server and make it sure it does not
 get block by spam filter.
   
-- Mailgun package `go get gopkg.in/mailgun/mailgun-go.v1`
+- Mailgun package `go get github.com/mailgun/mailgun-go`
+
+Steps:
+
+- Create a mailgun account and get info
+
+- Config
+
+- How to create a message
+
+- HTML messages
+
+- Sending with the Mailgun client
+
+- Creating an email package
+
+- Adding emailer to controller

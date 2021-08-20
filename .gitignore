@@ -10,3 +10,6 @@ images/
 
 #Config file
 .config
+
+#Compiled file
+bin/
