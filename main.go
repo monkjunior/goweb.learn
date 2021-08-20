@@ -2,29 +2,19 @@ package main
 
 import (
 	"fmt"
-	"net/http"
-
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
 	"github.com/monkjunior/goweb.learn/controllers"
 	"github.com/monkjunior/goweb.learn/middleware"
 	"github.com/monkjunior/goweb.learn/models"
 	"github.com/monkjunior/goweb.learn/rand"
-)
-
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "ted"
-	password = "your-password"
-	dbname   = "goweb_dev"
+	"net/http"
 )
 
 func main() {
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname,
-	)
-	service, err := models.NewServices(psqlInfo)
+	cfg := DefaultConfig()
+	dbConfig := DefaultPostgresConfig()
+	service, err := models.NewServices(dbConfig.ConnectionInfo())
 	if err != nil {
 		panic(err)
 	}
@@ -41,9 +31,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	// TODO: Update this to be a config variable
-	isProd := false
-	csrfMw := csrf.Protect(authKey, csrf.Secure(isProd))
+
+	csrfMw := csrf.Protect(authKey, csrf.Secure(cfg.IsProd()))
 	userMw := middleware.User{
 		UserService: service.User,
 	}
@@ -76,6 +65,6 @@ func main() {
 	r.HandleFunc("/galleries/{id:[0-9]+}/images", requireUserMw.ApplyFn(galleriesC.ImageUpload)).Methods("POST")
 	r.HandleFunc("/galleries/{id:[0-9]+}/images/{filename}/delete", requireUserMw.ApplyFn(galleriesC.ImageDelete)).Methods("POST")
 
-	fmt.Println("Starting server on port 8080")
-	http.ListenAndServe(":8080", csrfMw(userMw.Apply(r)))
+	fmt.Printf("Starting server on port %v\n", cfg.Port)
+	http.ListenAndServe(fmt.Sprintf(":%d", cfg.Port), csrfMw(userMw.Apply(r)))
 }

@@ -528,3 +528,5 @@ I might learn a lot from here!
     - We will use **gorilla/csrf**
   
     - Generate a csrfToken and put it in hidden field
+
+- Do not store secrets in your source code

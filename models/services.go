@@ -12,6 +12,7 @@ import (
 
 func NewServices(connInfo string) (*Services, error) {
 	db, err := gorm.Open(postgres.Open(connInfo), &gorm.Config{
+		// TODO: Config this
 		Logger: logger.New(
 			log.New(os.Stdout, "\r\n", log.LstdFlags),
 			logger.Config{

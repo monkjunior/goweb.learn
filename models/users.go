@@ -12,6 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// TODO: Config this
 const (
 	userPwPepper  = "ted-is-so-handsome"
 	hmacSecretKey = "secret-hmac-key"
