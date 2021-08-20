@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
+	"github.com/monkjunior/goweb.learn/context"
 	"github.com/monkjunior/goweb.learn/models"
 	"github.com/monkjunior/goweb.learn/rand"
 	"github.com/monkjunior/goweb.learn/views"
@@ -142,6 +144,27 @@ func (u *Users) signIn(w http.ResponseWriter, user *models.User) error {
 	}
 	http.SetCookie(w, &cookie)
 	return nil
+}
+
+// Logout is used to delete the user's cookies (remember_token)
+// and then will update the user resource with a new remember_token
+//
+// POST /logout
+func (u *Users) Logout(w http.ResponseWriter, r *http.Request) {
+	// Invalidate the user's cookie
+	cookie := http.Cookie{
+		Name:     "remember_token",
+		Value:    "",
+		Expires:  time.Now(),
+		HttpOnly: true,
+	}
+	http.SetCookie(w, &cookie)
+	// Change remember_token
+	user := context.User(r.Context())
+	token, _ := rand.RememberToken()
+	user.Remember = token
+	_ = u.us.Update(user)
+	http.Redirect(w, r, "/", http.StatusFound)
 }
 
 // CookieTest is used to display cookies set on the current user

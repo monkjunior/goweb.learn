@@ -58,6 +58,7 @@ func main() {
 	r.HandleFunc("/signup", usersC.Create).Methods("POST")
 	r.HandleFunc("/login", usersC.GetLogin).Methods("GET")
 	r.HandleFunc("/login", usersC.PostLogin).Methods("POST")
+	r.HandleFunc("/logout", requireUserMw.ApplyFn(usersC.Logout)).Methods("POST")
 	r.HandleFunc("/cookietest", usersC.CookieTest).Methods("GET")
 
 	// Assets
