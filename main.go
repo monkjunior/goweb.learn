@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"flag"
 	"fmt"
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
@@ -8,14 +10,17 @@ import (
 	"github.com/monkjunior/goweb.learn/middleware"
 	"github.com/monkjunior/goweb.learn/models"
 	"github.com/monkjunior/goweb.learn/rand"
+	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
-	cfg := DefaultConfig()
-	dbConfig := DefaultPostgresConfig()
+	boolPtr := flag.Bool("prod", false, "Set to true in production. This ensures that a .config file is provided before the application start")
+	flag.Parse()
+	cfg := LoadConfig(*boolPtr)
 	service, err := models.NewServices(
-		models.WithGorm(dbConfig.ConnectionInfo()),
+		models.WithGorm(cfg.Database.ConnectionInfo()),
 		models.WithUser(cfg.HMACKey, cfg.Pepper),
 		models.WithGallery(),
 		models.WithImage(),
@@ -24,7 +29,11 @@ func main() {
 		panic(err)
 	}
 	defer service.Close()
-	service.AutoMigrate()
+
+	err = service.AutoMigrate()
+	if err != nil {
+		panic(err)
+	}
 
 	r := mux.NewRouter()
 
@@ -70,6 +79,26 @@ func main() {
 	r.HandleFunc("/galleries/{id:[0-9]+}/images", requireUserMw.ApplyFn(galleriesC.ImageUpload)).Methods("POST")
 	r.HandleFunc("/galleries/{id:[0-9]+}/images/{filename}/delete", requireUserMw.ApplyFn(galleriesC.ImageDelete)).Methods("POST")
 
-	fmt.Printf("Starting server on port %v\n", cfg.Port)
-	http.ListenAndServe(fmt.Sprintf(":%d", cfg.Port), csrfMw(userMw.Apply(r)))
+	log.Printf("Starting server on port %v\n", cfg.Port)
+	log.Fatalln(http.ListenAndServe(fmt.Sprintf(":%d", cfg.Port), csrfMw(userMw.Apply(r))))
+}
+
+func LoadConfig(configReq bool) Config {
+	if !configReq {
+		return DefaultConfig()
+	}
+	f, err := os.Open(".config")
+	if err != nil {
+		log.Println(err)
+		panic(err)
+	}
+	var c Config
+	decoder := json.NewDecoder(f)
+	err = decoder.Decode(&c)
+	if err != nil {
+		log.Println(err)
+		panic(err)
+	}
+	log.Println("Successfully loaded .config file")
+	return c
 }

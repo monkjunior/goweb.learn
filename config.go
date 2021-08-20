@@ -36,18 +36,20 @@ func DefaultPostgresConfig() PostgresConfig {
 
 func DefaultConfig() Config {
 	return Config{
-		Port:    8080,
-		Env:     "dev",
-		Pepper:  "ted-is-so-handsome",
-		HMACKey: "secret-hmac-key",
+		Port:     8080,
+		Env:      "dev",
+		Pepper:   "ted-is-so-handsome",
+		HMACKey:  "secret-hmac-key",
+		Database: DefaultPostgresConfig(),
 	}
 }
 
 type Config struct {
-	Port    int    `json:"port"`
-	Env     string `json:"env"`
-	Pepper  string `json:"pepper"`
-	HMACKey string `json:"hmac_key"`
+	Port     int            `json:"port"`
+	Env      string         `json:"env"`
+	Pepper   string         `json:"pepper"`
+	HMACKey  string         `json:"hmac_key"`
+	Database PostgresConfig `json:"database"`
 }
 
 func (c Config) IsProd() bool {
