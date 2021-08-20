@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"io"
+	"net/url"
 	"os"
 	"path/filepath"
 )
@@ -13,6 +14,23 @@ import (
 type Image struct {
 	GalleryID uint
 	Filename  string
+}
+
+// Path is used to build the absolute path used to reference this image
+// via a web request.
+func (i *Image) Path() string {
+	temp := url.URL{
+		Path: "/" + i.RelativePath(),
+	}
+	return temp.String()
+}
+
+// RelativePath is used to build the path to this image on our local
+// disk, relative to where our Go application is run from.
+func (i *Image) RelativePath() string {
+	// Convert the gallery ID to a string
+	galleryID := fmt.Sprintf("%v", i.GalleryID)
+	return filepath.ToSlash(filepath.Join("images", "galleries", galleryID, i.Filename))
 }
 
 type ImageService interface {
@@ -76,18 +94,4 @@ func (i *imageService) mkImagePath(galleryID uint) (string, error) {
 		return "", err
 	}
 	return galleryPath, nil
-}
-
-// Path is used to build the absolute path used to reference this image
-// via a web request.
-func (i *Image) Path() string {
-	return "/" + i.RelativePath()
-}
-
-// RelativePath is used to build the path to this image on our local
-// disk, relative to where our Go application is run from.
-func (i *Image) RelativePath() string {
-	// Convert the gallery ID to a string
-	galleryID := fmt.Sprintf("%v", i.GalleryID)
-	return filepath.ToSlash(filepath.Join("images", "galleries", galleryID, i.Filename))
 }
