@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/monkjunior/goweb.learn/models"
@@ -23,7 +24,7 @@ type Users struct {
 	us        models.UserService
 }
 
-// This is used to render the form where a user can create
+// New is used to render the form where a user can create
 // a new user account
 //
 // GET /signup
@@ -37,7 +38,7 @@ type SignupForm struct {
 	Password string `schema:"password"`
 }
 
-// This is used to process signup form when a user tries to
+// Create is used to process signup form when a user tries to
 // create a new user account
 //
 // POST /signup
@@ -63,6 +64,7 @@ func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
 
 	err := u.signIn(w, &user)
 	if err != nil {
+		log.Println(err)
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
@@ -75,7 +77,7 @@ type LoginForm struct {
 	Password string `schema:"password"`
 }
 
-// This is used to render the form where a user can login
+// GetLogin is used to render the form where a user can login
 // a registered account
 //
 // GET /login
@@ -83,7 +85,7 @@ func (u *Users) GetLogin(w http.ResponseWriter, r *http.Request) {
 	u.LoginView.Render(w, r, nil)
 }
 
-// This is used to process login form when a user tries to
+// PostLogin is used to process login form when a user tries to
 // login by a registered account
 //
 // POST /login

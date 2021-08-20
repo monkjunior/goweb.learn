@@ -499,11 +499,11 @@ Other suggestions:
 
 I might learn a lot from here!
 
-- Creating an empty inteface{} when we start, because we do not know which methods will be needed.
+- Creating an empty interface{} when we start, because we do not know which methods will be needed.
 
 - Okay, now i want to verify if a user is logged in for each request to gallery service. Here we go, learn **middleware**!!
  
-    - closure in go: when you dynamically create a function and you can take data from outside of them and use this inside of the function.
+    - closure in go: when you dynamically create a function, and you can take data from outside them and use this inside of the function.
 
 - context package
 
@@ -517,4 +517,9 @@ I might learn a lot from here!
 
 - We abstract the way we process images by using io.Reader. It is an interface then you can use it with many ways of implementation like local files, dropbox, and so on.
 
+- Error clean
+
+    - Search for all **panic**, make sure they are correct.
+    
+    - Send your panics, bugs, or whatever unexpected events to [sentry](https://sentry.io/welcome/). They have a dashboard to help you quickly fix them.
 

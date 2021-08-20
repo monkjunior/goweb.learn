@@ -1,6 +1,9 @@
 package views
 
-import "github.com/monkjunior/goweb.learn/models"
+import (
+	"github.com/monkjunior/goweb.learn/models"
+	"log"
+)
 
 const (
 	AlertLvError   = "danger"
@@ -29,6 +32,7 @@ func (d *Data) SetAlert(err error) {
 	if pErr, ok := err.(PublicError); ok {
 		d.AlertError(pErr.Public())
 	} else {
+		log.Println(err)
 		d.AlertError(AlertMsgGeneric)
 	}
 }
