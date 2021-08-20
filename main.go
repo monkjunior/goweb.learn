@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
 	"github.com/monkjunior/goweb.learn/controllers"
 	"github.com/monkjunior/goweb.learn/middleware"
 	"github.com/monkjunior/goweb.learn/models"
+	"github.com/monkjunior/goweb.learn/rand"
 )
 
 const (
@@ -35,6 +37,13 @@ func main() {
 	usersC := controllers.NewUsers(service.User)
 	galleriesC := controllers.NewGalleries(service.Gallery, service.Image, *r)
 
+	authKey, err := rand.Bytes(32)
+	if err != nil {
+		panic(err)
+	}
+	// TODO: Update this to be a config variable
+	isProd := false
+	csrfMw := csrf.Protect(authKey, csrf.Secure(isProd))
 	userMw := middleware.User{
 		UserService: service.User,
 	}
@@ -68,5 +77,5 @@ func main() {
 	r.HandleFunc("/galleries/{id:[0-9]+}/images/{filename}/delete", requireUserMw.ApplyFn(galleriesC.ImageDelete)).Methods("POST")
 
 	fmt.Println("Starting server on port 8080")
-	http.ListenAndServe(":8080", userMw.Apply(r))
+	http.ListenAndServe(":8080", csrfMw(userMw.Apply(r)))
 }

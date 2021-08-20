@@ -523,3 +523,8 @@ I might learn a lot from here!
     
     - Send your panics, bugs, or whatever unexpected events to [sentry](https://sentry.io/welcome/). They have a dashboard to help you quickly fix them.
 
+- CSRF protection
+
+    - We will use **gorilla/csrf**
+  
+    - Generate a csrfToken and put it in hidden field
