@@ -60,8 +60,8 @@ type UserService interface {
 	Authenticate(email, password string) (*User, error)
 
 	// InitiateReset will start the reset password reset by creating the
-	// reset password token for the user found with the provide userID.
-	InitiateReset(userID uint) (string, error)
+	// reset password token for the user found with the provide email.
+	InitiateReset(email string) (string, error)
 	// CompleteReset will complete the reset password reset by updating the
 	// new password for the user and deleting the password reset token.
 	CompleteReset(token, newPw string) (*User, error)
@@ -110,11 +110,15 @@ func (us *userService) Authenticate(email, password string) (*User, error) {
 	return foundUser, nil
 }
 
-func (us *userService) InitiateReset(userID uint) (string, error) {
-	pwr := pwReset{
-		UserID: userID,
+func (us *userService) InitiateReset(email string) (string, error) {
+	user, err := us.ByEmail(email)
+	if err != nil {
+		return "", err
 	}
-	err := us.pwResetDB.Create(&pwr)
+	pwr := pwReset{
+		UserID: user.ID,
+	}
+	err = us.pwResetDB.Create(&pwr)
 	if err != nil {
 		return "", err
 	}
