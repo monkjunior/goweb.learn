@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
 	"github.com/monkjunior/goweb.learn/controllers"
+	"github.com/monkjunior/goweb.learn/email"
 	"github.com/monkjunior/goweb.learn/middleware"
 	"github.com/monkjunior/goweb.learn/models"
 	"github.com/monkjunior/goweb.learn/rand"
@@ -35,10 +36,17 @@ func main() {
 		panic(err)
 	}
 
+	mailgunCfg := cfg.Mailgun
+	emailer := email.NewClient(
+		email.WithSender("Goweb.learn support", "support@"+mailgunCfg.Domain),
+		email.WithMailgun(mailgunCfg.Domain, mailgunCfg.ApiKey),
+	)
+	_ = emailer
+
 	r := mux.NewRouter()
 
 	staticC := controllers.NewStatic()
-	usersC := controllers.NewUsers(service.User)
+	usersC := controllers.NewUsers(service.User, emailer)
 	galleriesC := controllers.NewGalleries(service.Gallery, service.Image, *r)
 
 	authKey, err := rand.Bytes(32)

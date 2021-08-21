@@ -7,16 +7,18 @@ import (
 	"time"
 
 	"github.com/monkjunior/goweb.learn/context"
+	"github.com/monkjunior/goweb.learn/email"
 	"github.com/monkjunior/goweb.learn/models"
 	"github.com/monkjunior/goweb.learn/rand"
 	"github.com/monkjunior/goweb.learn/views"
 )
 
-func NewUsers(us models.UserService) *Users {
+func NewUsers(us models.UserService, emailer *email.Client) *Users {
 	return &Users{
 		NewView:   views.NewView("bootstrap", "users/new"),
 		LoginView: views.NewView("bootstrap", "users/login"),
 		us:        us,
+		emailer:   emailer,
 	}
 }
 
@@ -24,6 +26,7 @@ type Users struct {
 	NewView   *views.View
 	LoginView *views.View
 	us        models.UserService
+	emailer   *email.Client
 }
 
 // New is used to render the form where a user can create
@@ -63,8 +66,11 @@ func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
 		u.NewView.Render(w, r, vd)
 		return
 	}
-
-	err := u.signIn(w, &user)
+	err := u.emailer.Welcome(user.Name, user.Email)
+	if err != nil {
+		log.Println(err)
+	}
+	err = u.signIn(w, &user)
 	if err != nil {
 		log.Println(err)
 		http.Redirect(w, r, "/login", http.StatusFound)
