@@ -86,10 +86,10 @@ func (s *Services) DestructiveReset() error {
 	if err != nil {
 		return err
 	}
-	return s.db.AutoMigrate(&User{}, &Gallery{})
+	return s.db.AutoMigrate(&User{}, &Gallery{}, &pwReset{})
 }
 
 // AutoMigrate will attempt to automatically migrate all table
 func (s *Services) AutoMigrate() error {
-	return s.db.AutoMigrate(&User{}, &Gallery{})
+	return s.db.AutoMigrate(&User{}, &Gallery{}, &pwReset{})
 }

@@ -12,6 +12,7 @@ var (
 	ErrPasswordTooShort  modelError = "models: password must be at least 8 charaters"
 	ErrRememberRequired  modelError = "models: remember is required"
 	ErrTitleRequired     modelError = "models: title is required"
+	ErrPwResetInvalid    modelError = "models: token provided is not valid"
 
 	ErrIDInvalid        privateError = "models: ID provided was invalid"
 	ErrRememberTooShort privateError = "models: remember token must be at least 32 bytes"

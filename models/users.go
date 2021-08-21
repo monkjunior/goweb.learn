@@ -4,6 +4,7 @@ import (
 	"errors"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/monkjunior/goweb.learn/hash"
 	"github.com/monkjunior/goweb.learn/rand"
@@ -57,6 +58,13 @@ type UserService interface {
 	// ErrNotFound, ErrPasswordIncorrect, or another error if something goes
 	// wrong.
 	Authenticate(email, password string) (*User, error)
+
+	// InitiateReset will start the reset password reset by creating the
+	// reset password token for the user found with the provide userID.
+	InitiateReset(userID uint) (string, error)
+	// CompleteReset will complete the reset password reset by updating the
+	// new password for the user and deleting the password reset token.
+	CompleteReset(token, newPw string) (*User, error)
 	UserDB
 }
 
@@ -71,12 +79,16 @@ func NewUserService(db *gorm.DB, hmacKeyString, pepper string) UserService {
 	return &userService{
 		UserDB: uVal,
 		pepper: pepper,
+		pwResetDB: newPwResetValidator(&pwResetGorm{
+			db: db,
+		}, hmac),
 	}
 }
 
 type userService struct {
 	UserDB
-	pepper string
+	pepper    string
+	pwResetDB pwResetDB
 }
 
 // Authenticate can be used to authenticate a user with
@@ -86,7 +98,6 @@ func (us *userService) Authenticate(email, password string) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	err = bcrypt.CompareHashAndPassword([]byte(foundUser.PasswordHash), []byte(password+us.pepper))
 	if err != nil {
 		switch err {
@@ -96,8 +107,42 @@ func (us *userService) Authenticate(email, password string) (*User, error) {
 			return nil, err
 		}
 	}
-
 	return foundUser, nil
+}
+
+func (us *userService) InitiateReset(userID uint) (string, error) {
+	pwr := pwReset{
+		UserID: userID,
+	}
+	err := us.pwResetDB.Create(&pwr)
+	if err != nil {
+		return "", err
+	}
+	return pwr.Token, nil
+}
+
+func (us *userService) CompleteReset(token, newPw string) (*User, error) {
+	pwr, err := us.pwResetDB.ByToken(token)
+	if err != nil {
+		if err == ErrNotFound {
+			return nil, ErrPwResetInvalid
+		}
+		return nil, err
+	}
+	if time.Now().Sub(pwr.CreatedAt) > (12 * time.Hour) {
+		return nil, ErrPwResetInvalid
+	}
+	user, err := us.ByID(pwr.UserID)
+	if err != nil {
+		return nil, err
+	}
+	user.Password = newPw
+	err = us.Update(user)
+	if err != nil {
+		return nil, err
+	}
+	_ = us.pwResetDB.Delete(pwr.ID)
+	return user, nil
 }
 
 type userValFunc func(*User) error
