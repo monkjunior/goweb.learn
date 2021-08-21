@@ -582,3 +582,31 @@ Steps:
 - Adding emailer to controller
 
 ## Persisting form's data
+
+## Resetting passwords
+
+Users come to log in and forget their password. Then thay can provide the email to receive a password reset link.
+
+How to build reset link ?
+
+- If the email is existed in our DB, we can generate a reset link and a reset password token then send the link to the user.
+
+- Then the user can go to the link to reset their password.
+
+Steps
+
+- Creating the DB model + corresponding validations
+
+- Adding InitiateReset and CompleteReset function to the UserService
+
+- Creating our 2 views
+  
+  - Forgot password
+  
+  - Reset password
+  
+- Creating corresponding controllers for our views
+
+- Creating a function to email users with their reset link
+
+- Adding links to the existing signup/login forms
