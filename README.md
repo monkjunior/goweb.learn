@@ -585,11 +585,11 @@ Steps:
 
 ## Resetting passwords
 
-Users come to log in and forget their password. Then thay can provide the email to receive a password reset link.
+Users come to log in and forget their password. Then they can provide the email to receive a password reset link.
 
 How to build reset link ?
 
-- If the email is existed in our DB, we can generate a reset link and a reset password token then send the link to the user.
+- If the email is existed in our DB, we can generate a reset link, and a reset password token then send the link to the user.
 
 - Then the user can go to the link to reset their password.
 
