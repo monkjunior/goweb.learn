@@ -610,3 +610,5 @@ Steps
 - Creating a function to email users with their reset link
 
 - Adding links to the existing signup/login forms
+
+Testing final result with [temp-mail](https://temp-mail.org/en/)
