@@ -4,6 +4,10 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"log"
+	"net/http"
+	"os"
+
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
 	"github.com/monkjunior/goweb.learn/controllers"
@@ -11,9 +15,6 @@ import (
 	"github.com/monkjunior/goweb.learn/middleware"
 	"github.com/monkjunior/goweb.learn/models"
 	"github.com/monkjunior/goweb.learn/rand"
-	"log"
-	"net/http"
-	"os"
 )
 
 func main() {

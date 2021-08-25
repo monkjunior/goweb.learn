@@ -3,13 +3,13 @@ package views
 import (
 	"bytes"
 	"errors"
-	"github.com/gorilla/csrf"
 	"html/template"
 	"io"
 	"log"
 	"net/http"
 	"path/filepath"
 
+	"github.com/gorilla/csrf"
 	"github.com/monkjunior/goweb.learn/context"
 )
 

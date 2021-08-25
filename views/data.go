@@ -1,10 +1,11 @@
 package views
 
 import (
-	"github.com/monkjunior/goweb.learn/models"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/monkjunior/goweb.learn/models"
 )
 
 const (
